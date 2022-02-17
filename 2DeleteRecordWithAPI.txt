@@ -1,0 +1,81 @@
+44.Delete Record with API:
+    - Fetch all data for list
+    - Show all record with table
+    - Make function for delete record
+    - Delete record on button click
+    - Test API result
+
+- Make a new component User.vue in components folder.
+        <template>
+            <div>
+                <table border="1px">
+                    <tr>
+                        <td>Id</td>
+                        <td>Title</td>
+                        <td>Author</td>
+                        <td>Action</td>
+                    </tr>
+                    <tr v-for="user in users" v-bind:key="user.id">
+                        <td>{{user.id}}</td>
+                        <td>{{user.title}}</td>
+                        <td>{{user.author}}</td>
+                        <td><Button v-on:click="deleteUser(user.id)">Delete</Button></td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+
+        <script>
+
+        import Vue from 'vue'                                          
+        import axios from 'axios'                             
+        import VueAxios from 'vue-axios'                      
+        Vue.use(VueAxios, axios)                              
+
+        export default {
+            name: 'User',
+            data()                              
+            {
+                return{users:null}
+            },
+            methods:
+            {
+                getUsers()
+                {
+                    this.axios.get('http://localhost:3000/posts').then((result)=>{
+                    console.warn(result)
+                    this.users = result.data
+                    })
+                },
+                deleteUser(id)
+                {
+                    this.axios.delete('http://localhost:3000/posts/'+id).then((result)=>{
+                        console.warn(result)
+                        this.getUsers()
+                    })
+                }
+            },
+            mounted()
+            {
+                this.getUsers()
+            },
+        }
+        </script>
+
+- App.vue file:
+    <template>
+    <div id="app">
+        <h1>Delete Record with API</h1>
+        <User />
+    </div>
+    </template>
+
+    <script>
+    import User from "./components/User.vue";
+    export default {
+        name: "App",
+        components: {
+            User
+        }
+    };
+    </script>
